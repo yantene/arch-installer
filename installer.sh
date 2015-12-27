@@ -129,7 +129,17 @@ default arch
 timeout 0
 EOF
 
-## yaourt
+## pacman settings
+
+### multilib
+
+cat >> /mnt/etc/pacman.conf <<EOF
+[multilib]
+Include = /etc/pacman.d/mirrorlist
+EOF
+pacman -Syy
+
+### yaourt
 
 cat >> /mnt/etc/pacman.conf <<EOF
 [archlinuxfr]
