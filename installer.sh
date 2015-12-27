@@ -54,8 +54,6 @@ umount /mnt
 
 btrfs_mntopts='noatime,discard,ssd,autodefrag,compress=lzo,space_cache'
 mount -o $btrfs_mntopts /dev/sda2 /mnt
-mkdir /mnt/home
-mount -o $btrfs_mntopts /dev/sda2 -osubvol=home /mnt/home
 mkdir /mnt/boot
 mount /dev/sda1 /mnt/boot
 
