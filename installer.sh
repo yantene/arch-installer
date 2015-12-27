@@ -92,9 +92,13 @@ pacstrap /mnt \
 
 CHROOT="arch-chroot /mnt"
 
-## generate fstab
+## edit fstab
 
-genfstab -L -p /mnt >> /mnt/etc/fstab
+cat > /mnt/etc/fstab <<EOF
+LABEL=LINUX_BTRFS /     btrfs rw,noatime,compress=lzo,ssd,discard,space_cache,autodefrag,subvolid=257,subvol=/root,subvol=root     0 0
+LABEL=EFI_SYSTEM  /boot vfat  rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro 0 2
+tmpfs             /tmp  tmpfs nodev,nosuid,size=4G                                                                                 0 0
+EOF
 
 ## hostname
 
