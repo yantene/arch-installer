@@ -19,7 +19,7 @@ set -ux
 
 ## partitioning
 
-gdisk $DEVICE <<EOF
+gdisk $DEVICE <<EOS
 o
 y
 n
@@ -39,7 +39,7 @@ c
 linux_btrfs_partition
 w
 y
-EOF
+EOS
 
 ## get each device file names
 
@@ -73,7 +73,7 @@ mount $part1 /mnt/boot
 # INSTALL
 
 ## mirror server
-cat > /etc/pacman.d/mirrorlist <<EOF
+cat > /etc/pacman.d/mirrorlist <<EOS
 Server = http://ftp.jaist.ac.jp/pub/Linux/ArchLinux/\$repo/os/\$arch
 Server = http://ftp.tsukuba.wide.ad.jp/Linux/archlinux/\$repo/os/\$arch
 Server = http://archlinux.cs.nctu.edu.tw/\$repo/os/\$arch
@@ -84,7 +84,7 @@ Server = http://mirror.pregi.net/pub/Linux/archlinux/\$repo/os/\$arch
 Server = http://mirror.rackspace.com/archlinux/\$repo/os/\$arch
 Server = http://mirrors.ustc.edu.cn/archlinux/\$repo/os/\$arch
 Server = http://ftp.yzu.edu.tw/Linux/archlinux/\$repo/os/\$arch
-EOF
+EOS
 
 ## install
 
@@ -105,10 +105,10 @@ CHROOT="arch-chroot /mnt"
 
 ## edit fstab
 
-cat > /mnt/etc/fstab <<EOF
+cat > /mnt/etc/fstab <<EOS
 LABEL=LINUX_BTRFS /     btrfs rw,noatime,compress=lzo,ssd,discard,space_cache,autodefrag,subvolid=257,subvol=/root,subvol=root     0 0
 LABEL=EFI_SYSTEM  /boot vfat  rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro 0 2
-EOF
+EOS
 
 ## hostname
 
@@ -128,55 +128,55 @@ $CHROOT hwclock --systohc --utc
 
 $CHROOT mkinitcpio -p linux
 $CHROOT bootctl --path=/boot install
-cat > /mnt/boot/loader/entries/arch.conf <<EOF
+cat > /mnt/boot/loader/entries/arch.conf <<EOS
 title   Arch Linux
 linux   /vmlinuz-linux
 initrd  /initramfs-linux.img
 options root=PARTLABEL=linux_btrfs_partition rw
-EOF
-cat > /mnt/boot/loader/loader.conf <<EOF
+EOS
+cat > /mnt/boot/loader/loader.conf <<EOS
 default arch
 timeout 0
-EOF
+EOS
 
 ## pacman settings
 
 ### multilib
 
 if [ `uname -m` = 'x86_64' ]; then
-cat >> /mnt/etc/pacman.conf <<EOF
+cat >> /mnt/etc/pacman.conf <<EOS
 [multilib]
 Include = /etc/pacman.d/mirrorlist
-EOF
+EOS
 pacman -Syy
 fi
 
 ### yaourt
 
-cat >> /mnt/etc/pacman.conf <<EOF
+cat >> /mnt/etc/pacman.conf <<EOS
 [archlinuxfr]
 SigLevel = Never
 Server = http://repo.archlinux.fr/\$arch
-EOF
+EOS
 $CHROOT pacman -Sy --noconfirm archlinuxfr/yaourt
 
 ## root settings
 
-$CHROOT passwd <<EOF
+$CHROOT passwd <<EOS
 $PASSWORD
 $PASSWORD
-EOF
-$CHROOT chsh <<EOF
+EOS
+$CHROOT chsh <<EOS
 /bin/zsh
-EOF
+EOS
 
 ## user settings
 
 $CHROOT useradd -m -g users -G wheel,video,audio -s /bin/zsh $USERNAME
-$CHROOT passwd $USERNAME <<EOF
+$CHROOT passwd $USERNAME <<EOS
 $PASSWORD
 $PASSWORD
-EOF
+EOS
 $CHROOT sed -i 's/^#\s%wheel\s*ALL=(ALL)\s*ALL$/%wheel\tALL=(ALL)\tALL/g' /etc/sudoers
 
 set +x
