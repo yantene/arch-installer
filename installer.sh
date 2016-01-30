@@ -143,11 +143,13 @@ EOF
 
 ### multilib
 
+if [ `uname -m` = 'x86_64' ]; then
 cat >> /mnt/etc/pacman.conf <<EOF
 [multilib]
 Include = /etc/pacman.d/mirrorlist
 EOF
 pacman -Syy
+fi
 
 ### yaourt
 
