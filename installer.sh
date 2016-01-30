@@ -2,9 +2,16 @@
 
 # INPUT PARAMETERS
 
-read -p  "hostname: " HOSTNAME
-read -p  "username: " USERNAME
-read -sp "password: " PASSWORD
+read -p  'device (/dev/sda): ' DEVICE
+[[ -z $DEVICE ]] && DEVICE='/dev/sda'
+
+read -p  'hostname (YanteneLaptop): ' HOSTNAME
+[[ -z $HOSTNAME ]] && HOSTNAME='YanteneLaptop'
+
+read -p  'username (yantene): ' USERNAME
+[[ -z $USERNAME ]] && USERNAME='yantene'
+
+read -sp 'password: ' PASSWORD
 
 set -ux
 
@@ -12,7 +19,7 @@ set -ux
 
 ## partitioning
 
-gdisk /dev/sda <<EOF
+gdisk $DEVICE <<EOF
 o
 y
 n
@@ -34,14 +41,20 @@ w
 y
 EOF
 
+## get each device file names
+
+parts=(`fdisk -l $DEVICE | tail -n 2 | cut -d' ' -f1`)
+part1=${parts[0]}
+part2=${parts[1]}
+
 ## format
 
-mkfs.fat -F32 -n EFI_SYSTEM /dev/sda1
-mkfs.btrfs -L LINUX_BTRFS -f /dev/sda2
+mkfs.vfat -F32 -n EFI_SYSTEM $part1
+mkfs.btrfs -L LINUX_BTRFS -f $part2
 
 ## create btrfs subvolume
 
-mount /dev/sda2 /mnt
+mount $part2 /mnt
 cd /mnt
 btrfs subvolume create root
 rootvol_id=`btrfs subvol list -p . | cut -d' ' -f2`
@@ -53,9 +66,9 @@ umount /mnt
 ## mount
 
 btrfs_mntopts='noatime,discard,ssd,autodefrag,compress=lzo,space_cache'
-mount -o $btrfs_mntopts /dev/sda2 /mnt
+mount -o $btrfs_mntopts $part2 /mnt
 mkdir /mnt/boot
-mount /dev/sda1 /mnt/boot
+mount $part1 /mnt/boot
 
 # INSTALL
 
@@ -95,7 +108,6 @@ CHROOT="arch-chroot /mnt"
 cat > /mnt/etc/fstab <<EOF
 LABEL=LINUX_BTRFS /     btrfs rw,noatime,compress=lzo,ssd,discard,space_cache,autodefrag,subvolid=257,subvol=/root,subvol=root     0 0
 LABEL=EFI_SYSTEM  /boot vfat  rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro 0 2
-tmpfs             /tmp  tmpfs nodev,nosuid,size=4G                                                                                 0 0
 EOF
 
 ## hostname
@@ -120,7 +132,7 @@ cat > /mnt/boot/loader/entries/arch.conf <<EOF
 title   Arch Linux
 linux   /vmlinuz-linux
 initrd  /initramfs-linux.img
-options root=/dev/sda2 rw
+options root=PARTLABEL=linux_btrfs_partition rw
 EOF
 cat > /mnt/boot/loader/loader.conf <<EOF
 default arch
@@ -164,9 +176,5 @@ $PASSWORD
 $PASSWORD
 EOF
 $CHROOT sed -i 's/^#\s%wheel\s*ALL=(ALL)\s*ALL$/%wheel\tALL=(ALL)\tALL/g' /etc/sudoers
-
-## sshd の有効化
-
-$CHROOT systemctl enable sshd
 
 set +x
