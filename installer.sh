@@ -106,8 +106,8 @@ CHROOT="arch-chroot /mnt"
 ## edit fstab
 
 cat > /mnt/etc/fstab <<EOS
-LABEL=LINUX_BTRFS /     btrfs rw,noatime,compress=lzo,ssd,discard,space_cache,autodefrag,subvolid=257,subvol=/root,subvol=root     0 0
-LABEL=EFI_SYSTEM  /boot vfat  rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro 0 2
+PARTLABEL='linux_btrfs_partition' /     btrfs rw,noatime,compress=lzo,ssd,discard,space_cache,autodefrag,subvolid=257,subvol=/root,subvol=root     0 0
+PARTLABEL='efi_system_partition'  /boot vfat  rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro 0 2
 EOS
 
 ## hostname
@@ -180,3 +180,9 @@ EOS
 $CHROOT sed -i 's/^#\s%wheel\s*ALL=(ALL)\s*ALL$/%wheel\tALL=(ALL)\tALL/g' /etc/sudoers
 
 set +x
+
+echo 'TODO: '
+echo ' 1. Edit kernel parameters (/mnt/boot/loader/entries/arch.conf)'
+echo ' 2. Check fstab (/mnt/etc/fstab)'
+echo ' 3. `umount -R /mnt`'
+echo ' 4. `reboot`'
