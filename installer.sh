@@ -25,10 +25,10 @@ y
 n
 
 
-+128M
-ef00
++2M
+ef02
 c
-efi_system_partition
+bios_boot_partition
 n
 
 
@@ -49,7 +49,6 @@ part2=${parts[1]}
 
 ## format
 
-mkfs.vfat -F32 -n EFI_SYSTEM $part1
 mkfs.btrfs -L LINUX_BTRFS -f $part2
 
 ## create btrfs subvolume
@@ -67,8 +66,6 @@ umount /mnt
 
 btrfs_mntopts='noatime,discard,ssd,autodefrag,compress=lzo,space_cache'
 mount -o $btrfs_mntopts $part2 /mnt
-mkdir /mnt/boot
-mount $part1 /mnt/boot
 
 # INSTALL
 
@@ -107,7 +104,6 @@ CHROOT="arch-chroot /mnt"
 
 cat > /mnt/etc/fstab <<EOS
 PARTLABEL='linux_btrfs_partition' /     btrfs rw,noatime,compress=lzo,ssd,discard,space_cache,autodefrag,subvolid=257,subvol=/root,subvol=root     0 0
-PARTLABEL='efi_system_partition'  /boot vfat  rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro 0 2
 EOS
 
 ## hostname
@@ -127,17 +123,11 @@ $CHROOT hwclock --systohc --utc
 ## boot
 
 $CHROOT mkinitcpio -p linux
-$CHROOT bootctl --path=/boot install
-cat > /mnt/boot/loader/entries/arch.conf <<EOS
-title   Arch Linux
-linux   /vmlinuz-linux
-initrd  /initramfs-linux.img
-options root=PARTLABEL=linux_btrfs_partition rw
-EOS
-cat > /mnt/boot/loader/loader.conf <<EOS
-default arch
-timeout 0
-EOS
+$CHROOT pacman --noconfirm -S grub
+$CHROOT grub-install --recheck --target=i386-pc $DEVICE
+$CHROOT grub-mkconfig -o /boot/grub/grub.cfg
+
+sleep 10
 
 ## pacman settings
 
