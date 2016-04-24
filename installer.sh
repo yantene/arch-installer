@@ -41,20 +41,19 @@ w
 y
 EOS
 
-## get each device file names
+## set each device file names
 
-parts=(`fdisk -l $DEVICE | tail -n 2 | cut -d' ' -f1`)
-part1=${parts[0]}
-part2=${parts[1]}
+efi_system_partition='/dev/disk/by-partlabel/efi_system_partition'
+linux_btrfs_partition='/dev/disk/by-partlabel/linux_btrfs_partition'
 
 ## format
 
-mkfs.vfat -F32 -n EFI_SYSTEM $part1
-mkfs.btrfs -L LINUX_BTRFS -f $part2
+mkfs.vfat -F32 -n EFI_SYSTEM $efi_system_partition
+mkfs.btrfs -L LINUX_BTRFS -f $linux_btrfs_partition
 
 ## create btrfs subvolume
 
-mount $part2 /mnt
+mount $linux_btrfs_partition /mnt
 cd /mnt
 btrfs subvolume create root
 rootvol_id=`btrfs subvol list -p . | cut -d' ' -f2`
@@ -66,9 +65,9 @@ umount /mnt
 ## mount
 
 btrfs_mntopts='noatime,discard,ssd,autodefrag,compress=lzo,space_cache'
-mount -o $btrfs_mntopts $part2 /mnt
+mount -o $btrfs_mntopts $linux_btrfs_partition /mnt
 mkdir /mnt/boot
-mount $part1 /mnt/boot
+mount $efi_system_partition /mnt/boot
 
 # INSTALL
 
@@ -106,7 +105,7 @@ CHROOT="arch-chroot /mnt"
 ## edit fstab
 
 cat > /mnt/etc/fstab <<EOS
-PARTLABEL='linux_btrfs_partition' /     btrfs rw,noatime,compress=lzo,ssd,discard,space_cache,autodefrag,subvolid=257,subvol=/root,subvol=root     0 0
+PARTLABEL='linux_btrfs_partition' /     btrfs rw,$btrfs_mntopts,subvol=/root                                                                       0 0
 PARTLABEL='efi_system_partition'  /boot vfat  rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro 0 2
 EOS
 
@@ -116,8 +115,10 @@ echo $HOSTNAME > /mnt/etc/hostname
 
 ## locale
 
-$CHROOT sed -i -e 's/#ja_JP.UTF-8/ja_JP.UTF-8/' /etc/locale.gen
-$CHROOT sed -i -e 's/#en_US.UTF-8/en_US.UTF-8/' /etc/locale.gen
+cat > /mnt/etc/locale.gen <<EOS
+ja_JP.UTF-8 UTF-8
+en_US.UTF-8 UTF-8
+EOS
 echo 'LANG=ja_JP.UTF-8' > /mnt/etc/locale.conf
 $CHROOT locale-gen
 echo -e 'KEYMAP=us\nFONT=Lat2-Terminus16' > /mnt/etc/vconsole.conf
