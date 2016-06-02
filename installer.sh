@@ -11,7 +11,10 @@ read -p  'hostname (YanteneLaptop): ' HOSTNAME
 read -p  'username (yantene): ' USERNAME
 [[ -z $USERNAME ]] && USERNAME='yantene'
 
-read -sp 'password: ' PASSWORD
+while [[ -z $PASSWORD ]]; do
+  read -sp 'password: ' PASSWORD
+  echo
+done
 
 set -ux
 
@@ -28,7 +31,7 @@ n
 +128M
 ef00
 c
-efi_system_partition
+efi_system
 n
 
 
@@ -36,39 +39,47 @@ n
 8300
 c
 2
-linux_btrfs_partition
+linux_root
 w
 y
 EOS
 
 ## set each device file names
 
-efi_system_partition='/dev/disk/by-partlabel/efi_system_partition'
-linux_btrfs_partition='/dev/disk/by-partlabel/linux_btrfs_partition'
+efi_system='/dev/disk/by-partlabel/efi_system'
+linux_root='/dev/disk/by-partlabel/linux_root'
+
+while [[ ! -e $efi_system ]] ||
+      [[ ! -e $linux_root ]]; do
+  sleep 0.1
+done
 
 ## format
 
-mkfs.vfat -F32 -n EFI_SYSTEM $efi_system_partition
-mkfs.btrfs -L LINUX_BTRFS -f $linux_btrfs_partition
+mkfs.fat -F32 -n EFI_SYSTEM $efi_system
+mkfs.btrfs -f -L LINUX_ROOT $linux_root
+
+## set each device mount options
+
+efi_system_mntopts='rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro'
+linux_root_mntopts='rw,noatime,discard,ssd,autodefrag,compress=lzo,space_cache'
 
 ## create btrfs subvolume
 
-mount $linux_btrfs_partition /mnt
+mount -o $linux_root_mntopts $linux_root /mnt
 cd /mnt
 btrfs subvolume create root
-rootvol_id=`btrfs subvol list -p . | cut -d' ' -f2`
+btrfs subvolume set-default `btrfs subvol list -p . | cut -d' ' -f2` .
 btrfs subvolume create root/home
-btrfs subvolume set-default $rootvol_id .
 btrfs subvolume create snapshots
-cd -
+cd ~
 umount /mnt
 
 ## mount
 
-btrfs_mntopts='noatime,discard,ssd,autodefrag,compress=lzo,space_cache'
-mount -o $btrfs_mntopts $linux_btrfs_partition /mnt
+mount -o $linux_root_mntopts $linux_root /mnt
 mkdir /mnt/boot
-mount $efi_system_partition /mnt/boot
+mount -o $efi_system_mntopts $efi_system /mnt/boot
 
 # INSTALL
 
@@ -106,8 +117,8 @@ CHROOT="arch-chroot /mnt"
 ## edit fstab
 
 cat > /mnt/etc/fstab <<EOS
-PARTLABEL='linux_btrfs_partition' /     btrfs rw,$btrfs_mntopts,subvol=/root                                                                       0 0
-PARTLABEL='efi_system_partition'  /boot vfat  rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro 0 2
+PARTLABEL='linux_root'  /     btrfs $linux_root_mntopts 0 0
+PARTLABEL='efi_system'  /boot vfat  $efi_system_mntopts 0 2
 EOS
 
 ## hostname
@@ -134,7 +145,7 @@ cat > /mnt/boot/loader/entries/arch.conf <<EOS
 title   Arch Linux
 linux   /vmlinuz-linux
 initrd  /initramfs-linux.img
-options root=PARTLABEL=linux_btrfs_partition rw
+options root=PARTLABEL=linux_root rw
 EOS
 cat > /mnt/boot/loader/loader.conf <<EOS
 default arch
@@ -184,7 +195,7 @@ $CHROOT sed -i 's/^#\s%wheel\s*ALL=(ALL)\s*ALL$/%wheel\tALL=(ALL)\tALL/g' /etc/s
 ## create btrfs snapshot
 
 umount -R /mnt
-mount -o $btrfs_mntopts $linux_btrfs_partition /mnt
+mount -o $linux_root_mntopts,subvol=/ $linux_root /mnt
 ptime=`date +'%s'`
 btrfs subvolume snapshot /mnt/root      /mnt/snapshots/$ptime-root
 btrfs subvolume snapshot /mnt/root/home /mnt/snapshots/$ptime-home
