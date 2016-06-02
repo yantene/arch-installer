@@ -59,6 +59,7 @@ btrfs subvolume create root
 rootvol_id=`btrfs subvol list -p . | cut -d' ' -f2`
 btrfs subvolume create root/home
 btrfs subvolume set-default $rootvol_id .
+btrfs subvolume create snapshots
 cd -
 umount /mnt
 
@@ -180,10 +181,13 @@ $PASSWORD
 EOS
 $CHROOT sed -i 's/^#\s%wheel\s*ALL=(ALL)\s*ALL$/%wheel\tALL=(ALL)\tALL/g' /etc/sudoers
 
-set +x
+## create btrfs snapshot
 
-echo 'TODO: '
-echo ' 1. Edit kernel parameters (/mnt/boot/loader/entries/arch.conf)'
-echo ' 2. Check fstab (/mnt/etc/fstab)'
-echo ' 3. `umount -R /mnt`'
-echo ' 4. `reboot`'
+umount -R /mnt
+mount -o $btrfs_mntopts $linux_btrfs_partition /mnt
+ptime=`date +'%s'`
+btrfs subvolume snapshot /mnt/root      /mnt/snapshots/$ptime-root
+btrfs subvolume snapshot /mnt/root/home /mnt/snapshots/$ptime-home
+umount /mnt
+
+set +x
