@@ -164,15 +164,6 @@ EOS
 pacman -Syy
 fi
 
-### yaourt
-
-cat >> /mnt/etc/pacman.conf <<EOS
-[archlinuxfr]
-SigLevel = Never
-Server = http://repo.archlinux.fr/\$arch
-EOS
-$CHROOT pacman -Sy --noconfirm archlinuxfr/yaourt
-
 ## root settings
 
 $CHROOT passwd <<EOS
