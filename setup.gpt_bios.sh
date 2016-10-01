@@ -28,10 +28,10 @@ y
 n
 
 
-+128M
-ef00
++2M
+ef02
 c
-efi_system
+bios_boot
 n
 
 
@@ -46,22 +46,20 @@ EOS
 
 ## set each device file names
 
-efi_system='/dev/disk/by-partlabel/efi_system'
+bios_boot='/dev/disk/by-partlabel/bios_boot'
 linux_root='/dev/disk/by-partlabel/linux_root'
 
-while [[ ! -e $efi_system ]] ||
+while [[ ! -e $bios_boot ]] ||
       [[ ! -e $linux_root ]]; do
   sleep 0.1
 done
 
 ## format
 
-mkfs.fat -F32 -n EFI_SYSTEM $efi_system
-mkfs.btrfs -f -L LINUX_ROOT $linux_root
+mkfs.btrfs -f -L LINUX_ROOT -f $linux_root
 
-## set each device mount options
+## set device mount options
 
-efi_system_mntopts='rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro'
 linux_root_mntopts='rw,noatime,discard,ssd,autodefrag,compress=lzo,space_cache'
 
 ## create btrfs subvolume
@@ -79,22 +77,36 @@ umount /mnt
 
 mount -o $linux_root_mntopts $linux_root /mnt
 mkdir /mnt/boot
-mount -o $efi_system_mntopts $efi_system /mnt/boot
 
 # INSTALL
 
 ## mirror server
 cat > /etc/pacman.d/mirrorlist <<EOS
 Server = http://ftp.jaist.ac.jp/pub/Linux/ArchLinux/\$repo/os/\$arch
+Server = http://ftp.nara.wide.ad.jp/pub/Linux/archlinux/\$repo/os/\$arch
 Server = http://ftp.tsukuba.wide.ad.jp/Linux/archlinux/\$repo/os/\$arch
-Server = http://archlinux.cs.nctu.edu.tw/\$repo/os/\$arch
+Server = http://srv2.ftp.ne.jp/Linux/packages/archlinux/\$repo/os/\$arch
+Server = http://mirror.premi.st/archlinux/\$repo/os/\$arch
 Server = http://ftp.tku.edu.tw/Linux/ArchLinux/\$repo/os/\$arch
+Server = http://mirrors.163.com/archlinux/\$repo/os/\$arch
+Server = http://ftp.kaist.ac.kr/ArchLinux/\$repo/os/\$arch
+Server = http://mirrors.xjtu.edu.cn/archlinux/\$repo/os/\$arch
 Server = http://shadow.ind.ntou.edu.tw/archlinux/\$repo/os/\$arch
-Server = http://mirrors.cdndepo.com/archlinux/\$repo/os/\$arch
-Server = http://mirror.pregi.net/pub/Linux/archlinux/\$repo/os/\$arch
-Server = http://mirror.rackspace.com/archlinux/\$repo/os/\$arch
+Server = https://mirrors.xjtu.edu.cn/archlinux/\$repo/os/\$arch
+Server = https://mirrors.ustc.edu.cn/archlinux/\$repo/os/\$arch
+Server = http://ftp.kddilabs.jp/Linux/packages/archlinux/\$repo/os/\$arch
+Server = http://archlinux.cs.nctu.edu.tw/\$repo/os/\$arch
+Server = http://mirrors.zju.edu.cn/archlinux/\$repo/os/\$arch
+Server = http://mirrors.tuna.tsinghua.edu.cn/archlinux/\$repo/os/\$arch
 Server = http://mirrors.ustc.edu.cn/archlinux/\$repo/os/\$arch
+Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/\$repo/os/\$arch
+Server = http://run.hit.edu.cn/archlinux/\$repo/os/\$arch
+Server = http://mirror-fpt-telecom.fpt.net/archlinux/\$repo/os/\$arch
+Server = http://mirrors.cug.edu.cn/archlinux/\$repo/os/\$arch
 Server = http://ftp.yzu.edu.tw/Linux/archlinux/\$repo/os/\$arch
+Server = http://mirrors.neusoft.edu.cn/archlinux/\$repo/os/\$arch
+Server = http://f.archlinuxvn.org/archlinux/\$repo/os/\$arch
+Server = http://mirrors.cqu.edu.cn/archlinux/\$repo/os/\$arch
 EOS
 
 ## install
@@ -118,7 +130,6 @@ CHROOT="arch-chroot /mnt"
 
 cat > /mnt/etc/fstab <<EOS
 PARTLABEL='linux_root'  /     btrfs $linux_root_mntopts 0 0
-PARTLABEL='efi_system'  /boot vfat  $efi_system_mntopts 0 2
 EOS
 
 ## hostname
@@ -140,17 +151,9 @@ $CHROOT hwclock --systohc --utc
 ## boot
 
 $CHROOT mkinitcpio -p linux
-$CHROOT bootctl --path=/boot install
-cat > /mnt/boot/loader/entries/arch.conf <<EOS
-title   Arch Linux
-linux   /vmlinuz-linux
-initrd  /initramfs-linux.img
-options root=PARTLABEL=linux_root rw
-EOS
-cat > /mnt/boot/loader/loader.conf <<EOS
-default arch
-timeout 0
-EOS
+$CHROOT pacman --noconfirm -S grub
+$CHROOT grub-install --recheck --target=i386-pc $DEVICE
+$CHROOT grub-mkconfig -o /boot/grub/grub.cfg
 
 ## pacman settings
 
@@ -188,8 +191,8 @@ $CHROOT sed -i 's/^#\s%wheel\s*ALL=(ALL)\s*ALL$/%wheel\tALL=(ALL)\tALL/g' /etc/s
 umount -R /mnt
 mount -o $linux_root_mntopts,subvol=/ $linux_root /mnt
 ptime=`date +'%s'`
-btrfs subvolume snapshot /mnt/root      /mnt/snapshots/$ptime-root
-btrfs subvolume snapshot /mnt/root/home /mnt/snapshots/$ptime-home
+btrfs subvolume snapshot /mnt/root      /mnt/snapshots/${ptime}-root
+btrfs subvolume snapshot /mnt/root/home /mnt/snapshots/${ptime}-home
 umount /mnt
 
 set +x
