@@ -35,10 +35,18 @@ bios_boot
 n
 
 
++16G
+8200
+c
+2
+linux_swap
+n
+
+
 
 8300
 c
-2
+3
 linux_root
 w
 y
@@ -47,16 +55,20 @@ EOS
 ## set each device file names
 
 bios_boot='/dev/disk/by-partlabel/bios_boot'
+linux_swap='/dev/disk/by-partlabel/linux_swap'
 linux_root='/dev/disk/by-partlabel/linux_root'
 
-while [[ ! -e $bios_boot ]] ||
+while [[ ! -e $bios_boot ]]  ||
+      [[ ! -e $linux_swap ]] ||
       [[ ! -e $linux_root ]]; do
   sleep 0.1
 done
 
 ## format
 
-mkfs.btrfs -f -L LINUX_ROOT -f $linux_root
+mkswap -L LINUX_SWAP $linux_swap
+swapon $linux_swap
+mkfs.btrfs -f -L LINUX_ROOT $linux_root
 
 ## set device mount options
 
