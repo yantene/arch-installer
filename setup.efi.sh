@@ -187,7 +187,7 @@ cat >> /mnt/etc/pacman.conf <<EOS
 [multilib]
 Include = /etc/pacman.d/mirrorlist
 EOS
-pacman -Syy
+$CHROOT pacman -Syy
 fi
 
 ## root settings
