@@ -35,10 +35,18 @@ efi_system
 n
 
 
++16G
+8200
+c
+2
+linux_swap
+n
+
+
 
 8300
 c
-2
+3
 linux_root
 w
 y
@@ -47,9 +55,11 @@ EOS
 ## set each device file names
 
 efi_system='/dev/disk/by-partlabel/efi_system'
+linux_swap='/dev/disk/by-partlabel/linux_swap'
 linux_root='/dev/disk/by-partlabel/linux_root'
 
 while [[ ! -e $efi_system ]] ||
+      [[ ! -e $linux_swap ]] ||
       [[ ! -e $linux_root ]]; do
   sleep 0.1
 done
@@ -57,6 +67,7 @@ done
 ## format
 
 mkfs.fat -F32 -n EFI_SYSTEM $efi_system
+mkswap -L LINUX_SWAP $linux_swap; swapon $linux_swap
 mkfs.btrfs -f -L LINUX_ROOT $linux_root
 
 ## set each device mount options
@@ -203,8 +214,8 @@ $CHROOT sed -i 's/^#\s%wheel\s*ALL=(ALL)\s*ALL$/%wheel\tALL=(ALL)\tALL/g' /etc/s
 umount -R /mnt
 mount -o $linux_root_mntopts,subvol=/ $linux_root /mnt
 ptime=`date +'%s'`
-btrfs subvolume snapshot /mnt/root      /mnt/snapshots/$ptime-root
-btrfs subvolume snapshot /mnt/root/home /mnt/snapshots/$ptime-home
+btrfs subvolume snapshot /mnt/root      /mnt/snapshots/${ptime}-root
+btrfs subvolume snapshot /mnt/root/home /mnt/snapshots/${ptime}-home
 umount /mnt
 
 set +x
