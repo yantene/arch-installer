@@ -11,6 +11,9 @@ read -p  'hostname (YanteneLaptop): ' HOSTNAME
 read -p  'username (yantene): ' USERNAME
 [[ -z $USERNAME ]] && USERNAME='yantene'
 
+read -p  'swap size (0[MB]): ' SWAPSIZE
+[[ -z $SWAPSIZE ]] && SWAPSIZE='0'
+
 while [[ -z $PASSWORD ]]; do
   read -sp 'password: ' PASSWORD
   echo
@@ -22,7 +25,8 @@ set -ux
 
 ## partitioning
 
-gdisk $DEVICE <<EOS
+if [[ $SWAPSIZE -eq 0 ]]; then
+  gdisk $DEVICE <<EOS
 o
 y
 n
@@ -35,7 +39,29 @@ efi_system
 n
 
 
-+16G
+
+8300
+c
+2
+linux_root
+w
+y
+EOS
+else
+  gdisk $DEVICE <<EOS
+o
+y
+n
+
+
++128M
+ef00
+c
+efi_system
+n
+
+
++${SWAPSIZE}M
 8200
 c
 2
@@ -51,6 +77,7 @@ linux_root
 w
 y
 EOS
+fi
 
 ## set each device file names
 
@@ -59,7 +86,7 @@ linux_swap='/dev/disk/by-partlabel/linux_swap'
 linux_root='/dev/disk/by-partlabel/linux_root'
 
 while [[ ! -e $efi_system ]] ||
-      [[ ! -e $linux_swap ]] ||
+      [[ SWAPSIZE -ne 0 ]] && [[ ! -e $linux_swap ]] ||
       [[ ! -e $linux_root ]]; do
   sleep 0.1
 done
@@ -67,7 +94,8 @@ done
 ## format
 
 mkfs.fat -F32 -n EFI_SYSTEM $efi_system
-mkswap -L LINUX_SWAP $linux_swap; swapon $linux_swap
+[[ SWAPSIZE -ne 0 ]] && mkswap -L LINUX_SWAP $linux_swap
+[[ SWAPSIZE -ne 0 ]] && swapon $linux_swap
 mkfs.btrfs -f -L LINUX_ROOT $linux_root
 
 ## set each device mount options
