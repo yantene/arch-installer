@@ -61,7 +61,7 @@ bios_boot
 n
 
 
-+${SWAPSIZE}G
++${SWAPSIZE}M
 8200
 c
 2
