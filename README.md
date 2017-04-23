@@ -19,6 +19,7 @@ QEMU 環境および SONY VAIO T (SVT1311AJ) で検証しました．
   - インストール直後の環境は自動でスナップショットを撮ります．
 - ミラーサーバは日本近辺のサーバをベタ書きしています．
 - エディタとして neovim を標準でインストールします．
+- シェルとして zsh を標準でインストールします．
 
 ## 使い方
 
@@ -36,17 +37,32 @@ QEMU 環境および SONY VAIO T (SVT1311AJ) で検証しました．
 `curl` を使うのが一番手軽な方法かと思います．
 
 ```bash
-curl -L goo.gl/bE0EMj > setup.sh # EFI 環境の場合
-curl -L goo.gl/wGlFfp > setup.sh # BIOS 環境の場合
+curl -L git.io/yai_efi > setup.sh # EFI 環境の場合
+curl -L git.io/yai_gpt_bios > setup.sh # BIOS 環境の場合
 ```
 
 後は`setup.sh`をおもむろに実行し，
 指示に従って以下の項目を入力します．
-- インストール先デバイス (デフォルト値: /dev/sda)
-- ホスト名 (デフォルト値: YanteneLaptop)
-- ユーザ名 (デフォルト値: yantene)
-- パスワード (root と上記ユーザ名のユーザは同じパスワードとなります)
-- スワップ領域のサイズ (デフォルト値: 0)
+- **インストール先デバイス** (デフォルト値: /dev/sda)
+- **ホスト名** (デフォルト値: YanteneLaptop)
+- **ユーザ名** (デフォルト値: yantene)
+- **パスワード** (root と上記ユーザ名のユーザは同じパスワードとなります)
+- **スワップ領域のサイズ** (デフォルト値: 0)
+後はよしなにインストールされます．
+
+再起動し，インストール先デバイスからブートしてください．
+
+## インストール後
+
+筆者は，CLI 周りの環境は，
+[yantene/config: dotfiles and great buddies](https://github.com/yantene/config)
+を `$HOME/.config` に `git clone` して整えています．
+
+また，GUI 周りであったり，
+プリンタに関するまとめであったりを
+本リポジトリの `doc/` 下に配置しています．
+いずれ整理するつもりで，
+現在非常に雑然としていますが，参考にしてください．
 
 ## 参考文献
 
