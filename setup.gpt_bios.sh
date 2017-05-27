@@ -184,7 +184,7 @@ EOS
 echo 'LANG=ja_JP.UTF-8' > /mnt/etc/locale.conf
 $CHROOT locale-gen
 echo -e 'KEYMAP=us\nFONT=Lat2-Terminus16' > /mnt/etc/vconsole.conf
-$CHROOT ln -s /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+$CHROOT ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 $CHROOT hwclock --systohc --utc
 
 ## boot
