@@ -15,7 +15,7 @@ yaourt -S pulseaudio{,-alsa} alsa-utils pamixer pavucontrol\
           xmonad xmonad-contrib xmobar\
           xsel rofi dunst termite\
           fcitx-mozc fcitx-im fcitx-configtool\
-          ttf-migu noto-fonts{,-cjk,-emoji} otf-takao{,ex,mj}
+          ttf-mplus noto-fonts{,-cjk,-emoji} otf-ipamjfont
 sudo -E nvim /etc/lightdm/lightdm.conf
 # greeter-sesssion=lightdm-gtk-greeter
 sudo systemctl enable lightdm.service
