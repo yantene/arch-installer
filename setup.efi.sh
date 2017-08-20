@@ -19,7 +19,7 @@ while [[ -z $PASSWORD ]]; do
   echo
 done
 
-set -ux
+set -eux
 
 # SETUP STORAGE
 
