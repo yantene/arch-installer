@@ -14,7 +14,7 @@ yaourt -S pulseaudio{,-alsa} alsa-utils pamixer pavucontrol\
           lightdm{,-gtk-greeter}\
           xmonad xmonad-contrib xmobar\
           xsel rofi dunst termite\
-          fcitx-{mozc,im,config-tool}\
+          fcitx-{mozc,im,configtool}\
           ttf-mplus noto-fonts{,-cjk,-emoji} otf-ipamjfont
 sudo -E nvim /etc/lightdm/lightdm.conf
 # greeter-sesssion=lightdm-gtk-greeter
