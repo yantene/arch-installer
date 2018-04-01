@@ -2,17 +2,17 @@
 
 # INPUT PARAMETERS
 
-read -p  'device (/dev/sda): ' DEVICE
-[[ -z $DEVICE ]] && DEVICE='/dev/sda'
+read -p  'device (/dev/mmcblk1): ' DEVICE
+[[ -z $DEVICE ]] && DEVICE='/dev/mmcblk1'
 
-read -p  'hostname (YanteneLaptop): ' HOSTNAME
-[[ -z $HOSTNAME ]] && HOSTNAME='YanteneLaptop'
+read -p  'hostname (YanteneTablet): ' HOSTNAME
+[[ -z $HOSTNAME ]] && HOSTNAME='YanteneTablet'
 
 read -p  'username (yantene): ' USERNAME
 [[ -z $USERNAME ]] && USERNAME='yantene'
 
-read -p  'swap size (0[MB]): ' SWAPSIZE
-[[ -z $SWAPSIZE ]] && SWAPSIZE='0'
+read -p  'swap size (1024[MB]): ' SWAPSIZE
+[[ -z $SWAPSIZE ]] && SWAPSIZE='1024'
 
 while [[ -z $PASSWORD ]]; do
   read -sp 'password: ' PASSWORD
@@ -162,8 +162,6 @@ pacstrap /mnt \
   zsh \
   neovim \
   openssh \
-  dialog \
-  linux-firmware \
   wpa_supplicant
 
 # SETUP
