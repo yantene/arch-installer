@@ -42,7 +42,7 @@ n
 
 8300
 c
-3
+2
 linux_root
 w
 y
