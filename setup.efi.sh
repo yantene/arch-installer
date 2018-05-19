@@ -25,58 +25,27 @@ set -eux
 
 ## partitioning
 
+sgdisk -Z $DEVICE
 if [[ $SWAPSIZE -eq 0 ]]; then
-  gdisk $DEVICE <<EOS
-o
-y
-n
+  sgdisk -n '1::+128M' $DEVICE
+  sgdisk -t '1:ef00' $DEVICE
+  sgdisk -c '1:efi_system' $DEVICE
 
-
-+128M
-ef00
-c
-efi_system
-n
-
-
-
-8300
-c
-2
-linux_root
-w
-y
-EOS
+  sgdisk -n '2::' $DEVICE
+  sgdisk -t '2:8300' $DEVICE
+  sgdisk -c '2:linux_root' $DEVICE
 else
-  gdisk $DEVICE <<EOS
-o
-y
-n
+  sgdisk -n '1::+2M' $DEVICE
+  sgdisk -t '1:ef00' $DEVICE
+  sgdisk -c '1:efi_system' $DEVICE
 
+  sgdisk -n "2::+${SWAPSIZE}M" $DEVICE
+  sgdisk -t '2:8200' $DEVICE
+  sgdisk -c '2:linux_swap' $DEVICE
 
-+128M
-ef00
-c
-efi_system
-n
-
-
-+${SWAPSIZE}M
-8200
-c
-2
-linux_swap
-n
-
-
-
-8300
-c
-3
-linux_root
-w
-y
-EOS
+  sgdisk -n '3::' $DEVICE
+  sgdisk -t '3:8300' $DEVICE
+  sgdisk -c '3:linux_root' $DEVICE
 fi
 
 ## set each device file names
