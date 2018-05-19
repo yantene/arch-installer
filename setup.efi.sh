@@ -63,8 +63,8 @@ done
 ## format
 
 mkfs.fat -F32 -n EFI_SYSTEM $efi_system
-[[ SWAPSIZE -ne 0 ]] && mkswap -L LINUX_SWAP $linux_swap
-[[ SWAPSIZE -ne 0 ]] && swapon $linux_swap
+[[ $SWAPSIZE -ne 0 ]] && mkswap -L LINUX_SWAP $linux_swap
+[[ $SWAPSIZE -ne 0 ]] && swapon $linux_swap
 mkfs.btrfs -f -L LINUX_ROOT $linux_root
 
 ## set each device mount options
