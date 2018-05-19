@@ -66,6 +66,18 @@ curl -L git.io/yai_gpt_bios > setup.sh # BIOS 環境の場合
 いずれ整理するつもりで，
 現在非常に雑然としていますが，参考にしてください．
 
+## baytrail tablet について
+
+`setup.efi.sh` の boot に関する箇所を，
+以下に置換すればインストール可能です．
+
+```bash
+$CHROOT mkinitcpio -p linux
+$CHROOT pacman --noconfirm -S grub efibootmgr
+$CHROOT grub-install --recheck --target=i386-efi --efi-directory=/boot --bootloader-id=grub
+$CHROOT grub-mkconfig -o /boot/grub/grub.cfg
+```
+
 ## 参考文献
 
 インストールスクリプトの書き方には以下を参考にしました．
