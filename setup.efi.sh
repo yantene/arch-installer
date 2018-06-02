@@ -54,11 +54,7 @@ efi_system='/dev/disk/by-partlabel/efi_system'
 linux_swap='/dev/disk/by-partlabel/linux_swap'
 linux_root='/dev/disk/by-partlabel/linux_root'
 
-while [[ ! -e $efi_system ]] ||
-      [[ $SWAPSIZE -ne 0 ]] && [[ ! -e $linux_swap ]] ||
-      [[ ! -e $linux_root ]]; do
-  sleep 0.1
-done
+sleep 10 # XXX
 
 ## format
 

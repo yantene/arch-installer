@@ -54,11 +54,7 @@ bios_boot='/dev/disk/by-partlabel/bios_boot'
 linux_swap='/dev/disk/by-partlabel/linux_swap'
 linux_root='/dev/disk/by-partlabel/linux_root'
 
-while [[ ! -e $bios_boot ]]  ||
-      [[ $SWAPSIZE -ne 0 ]] && [[ ! -e $linux_swap ]] ||
-      [[ ! -e $linux_root ]]; do
-  sleep 0.1
-done
+sleep 10 # XXX
 
 ## format
 
