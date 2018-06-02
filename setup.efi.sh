@@ -1,5 +1,7 @@
 #!/bin/sh
 
+cd `dirname $0`
+
 # INPUT PARAMETERS
 
 read -p  'device (/dev/sda): ' DEVICE
@@ -92,33 +94,7 @@ mount -o $efi_system_mntopts $efi_system /mnt/boot
 # INSTALL
 
 ## mirror server
-cat > /etc/pacman.d/mirrorlist <<EOS
-Server = http://ftp.jaist.ac.jp/pub/Linux/ArchLinux/\$repo/os/\$arch
-Server = http://ftp.nara.wide.ad.jp/pub/Linux/archlinux/\$repo/os/\$arch
-Server = http://ftp.tsukuba.wide.ad.jp/Linux/archlinux/\$repo/os/\$arch
-Server = http://srv2.ftp.ne.jp/Linux/packages/archlinux/\$repo/os/\$arch
-Server = http://mirror.premi.st/archlinux/\$repo/os/\$arch
-Server = http://ftp.tku.edu.tw/Linux/ArchLinux/\$repo/os/\$arch
-Server = http://mirrors.163.com/archlinux/\$repo/os/\$arch
-Server = http://ftp.kaist.ac.kr/ArchLinux/\$repo/os/\$arch
-Server = http://mirrors.xjtu.edu.cn/archlinux/\$repo/os/\$arch
-Server = http://shadow.ind.ntou.edu.tw/archlinux/\$repo/os/\$arch
-Server = https://mirrors.xjtu.edu.cn/archlinux/\$repo/os/\$arch
-Server = https://mirrors.ustc.edu.cn/archlinux/\$repo/os/\$arch
-Server = http://ftp.kddilabs.jp/Linux/packages/archlinux/\$repo/os/\$arch
-Server = http://archlinux.cs.nctu.edu.tw/\$repo/os/\$arch
-Server = http://mirrors.zju.edu.cn/archlinux/\$repo/os/\$arch
-Server = http://mirrors.tuna.tsinghua.edu.cn/archlinux/\$repo/os/\$arch
-Server = http://mirrors.ustc.edu.cn/archlinux/\$repo/os/\$arch
-Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/\$repo/os/\$arch
-Server = http://run.hit.edu.cn/archlinux/\$repo/os/\$arch
-Server = http://mirror-fpt-telecom.fpt.net/archlinux/\$repo/os/\$arch
-Server = http://mirrors.cug.edu.cn/archlinux/\$repo/os/\$arch
-Server = http://ftp.yzu.edu.tw/Linux/archlinux/\$repo/os/\$arch
-Server = http://mirrors.neusoft.edu.cn/archlinux/\$repo/os/\$arch
-Server = http://f.archlinuxvn.org/archlinux/\$repo/os/\$arch
-Server = http://mirrors.cqu.edu.cn/archlinux/\$repo/os/\$arch
-EOS
+cp -f ./res/mirrorlist /etc/pacman.d/mirrorlist
 
 ## install
 
