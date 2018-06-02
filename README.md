@@ -37,11 +37,11 @@ QEMU 環境および SONY VAIO T (SVT1311AJ) で検証しました．
 `curl` を使うのが一番手軽な方法かと思います．
 
 ```bash
-curl -L git.io/yai_efi > setup.sh # EFI 環境の場合
-curl -L git.io/yai_gpt_bios > setup.sh # BIOS 環境の場合
+curl -L git.io/yai.tgz | tar zxf -
 ```
 
-後は`setup.sh`をおもむろに実行し，
+後はEFI環境の場合は`arch-installer-master/setup.efi.sh`，
+BIOS環境の場合は`arch-installer-master/setup.gpt_bios.sh`をおもむろに実行し，
 指示に従って以下の項目を入力します．
 
 - **インストール先デバイス** (デフォルト値: /dev/sda)
