@@ -1,7 +1,5 @@
 #!/bin/sh
 
-cd `dirname $0`
-
 # INPUT PARAMETERS
 
 read -p  'device (/dev/sda): ' DEVICE
@@ -94,7 +92,7 @@ mount -o $efi_system_mntopts $efi_system /mnt/boot
 # INSTALL
 
 ## mirror server
-cp -f ./res/mirrorlist /etc/pacman.d/mirrorlist
+cp -f `dirname $0`/res/mirrorlist /etc/pacman.d/mirrorlist
 
 ## install
 
