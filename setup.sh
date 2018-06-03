@@ -26,19 +26,21 @@ set -eux
 ## partitioning
 
 sgdisk -Z $DEVICE
-if [[ $SWAPSIZE -eq 0 ]]; then
-  sgdisk -n '1::+2M' $DEVICE
+
+sgdisk -n '1::+512M' $DEVICE
+if [[ -e /sys/firmware/efi/efivars ]]; then
+  sgdisk -t '1:ef00' $DEVICE
+  sgdisk -c '1:efi_system' $DEVICE
+else
   sgdisk -t '1:ef02' $DEVICE
   sgdisk -c '1:bios_boot' $DEVICE
+fi
 
+if [[ $SWAPSIZE -eq 0 ]]; then
   sgdisk -n '2::' $DEVICE
   sgdisk -t '2:8300' $DEVICE
   sgdisk -c '2:linux_root' $DEVICE
 else
-  sgdisk -n '1::+2M' $DEVICE
-  sgdisk -t '1:ef02' $DEVICE
-  sgdisk -c '1:bios_boot' $DEVICE
-
   sgdisk -n "2::+${SWAPSIZE}M" $DEVICE
   sgdisk -t '2:8200' $DEVICE
   sgdisk -c '2:linux_swap' $DEVICE
@@ -50,7 +52,7 @@ fi
 
 ## set each device file names
 
-bios_boot='/dev/disk/by-partlabel/bios_boot'
+efi_system='/dev/disk/by-partlabel/efi_system'
 linux_swap='/dev/disk/by-partlabel/linux_swap'
 linux_root='/dev/disk/by-partlabel/linux_root'
 
@@ -58,15 +60,18 @@ sleep 10 # XXX
 
 ## format
 
+[[ -e /sys/firmware/efi/efivars ]] && mkfs.fat -F32 -n EFI_SYSTEM $efi_system
 [[ $SWAPSIZE -ne 0 ]] && mkswap -L LINUX_SWAP $linux_swap
 [[ $SWAPSIZE -ne 0 ]] && swapon $linux_swap
 mkfs.btrfs -f -L LINUX_ROOT $linux_root
 
-## set device mount options
+## set each device mount options
 
+efi_system_mntopts='rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro'
 linux_root_mntopts='rw,noatime,discard,ssd,autodefrag,compress=lzo,space_cache'
 
 ## create btrfs subvolume
+
 
 mount -o $linux_root_mntopts $linux_root /mnt
 cd /mnt
@@ -81,6 +86,7 @@ umount /mnt
 
 mount -o $linux_root_mntopts $linux_root /mnt
 mkdir /mnt/boot
+[[ -e /sys/firmware/efi/efivars ]] && mount -o $efi_system_mntopts $efi_system /mnt/boot
 
 # INSTALL
 
@@ -106,9 +112,10 @@ CHROOT="arch-chroot /mnt"
 
 ## edit fstab
 
-cat > /mnt/etc/fstab <<EOS
-PARTLABEL='linux_root'  /     btrfs $linux_root_mntopts 0 0
-EOS
+echo "PARTLABEL='linux_root'  /     btrfs $linux_root_mntopts 0 0" > /mnt/etc/fstab
+if [[ -e /sys/firmware/efi/efivars ]]; then
+  echo "PARTLABEL='efi_system'  /boot vfat  $efi_system_mntopts 0 2" >> /mnt/etc/fstab
+fi
 
 ## hostname
 
@@ -129,9 +136,23 @@ $CHROOT hwclock --systohc --utc
 ## boot
 
 $CHROOT mkinitcpio -p linux
-$CHROOT pacman --noconfirm -S grub
-$CHROOT grub-install --recheck --target=i386-pc $DEVICE
-$CHROOT grub-mkconfig -o /boot/grub/grub.cfg
+if [[ -e /sys/firmware/efi/efivars ]]; then
+  $CHROOT bootctl --path=/boot install
+  cat > /mnt/boot/loader/entries/arch.conf <<EOS
+title   Arch Linux
+linux   /vmlinuz-linux
+initrd  /initramfs-linux.img
+options root=PARTLABEL=linux_root rw
+EOS
+  cat > /mnt/boot/loader/loader.conf <<EOS
+default arch
+timeout 0
+EOS
+else
+  $CHROOT pacman --noconfirm -S grub
+  $CHROOT grub-install --recheck --target=i386-pc $DEVICE
+  $CHROOT grub-mkconfig -o /boot/grub/grub.cfg
+fi
 
 ## pacman settings
 
