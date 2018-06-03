@@ -28,7 +28,7 @@ set -eux
 sgdisk -Z $DEVICE
 
 sgdisk -n '1::+512M' $DEVICE
-if [[ -e /sys/firmware/efi/efivar ]]; then
+if [[ -e /sys/firmware/efi/efivars ]]; then
   sgdisk -t '1:ef00' $DEVICE
   sgdisk -c '1:efi_system' $DEVICE
 else
@@ -60,7 +60,7 @@ sleep 10 # XXX
 
 ## format
 
-[[ -e /sys/firmware/efi/efivar ]] && mkfs.fat -F32 -n EFI_SYSTEM $efi_system
+[[ -e /sys/firmware/efi/efivars ]] && mkfs.fat -F32 -n EFI_SYSTEM $efi_system
 [[ $SWAPSIZE -ne 0 ]] && mkswap -L LINUX_SWAP $linux_swap
 [[ $SWAPSIZE -ne 0 ]] && swapon $linux_swap
 mkfs.btrfs -f -L LINUX_ROOT $linux_root
@@ -86,7 +86,7 @@ umount /mnt
 
 mount -o $linux_root_mntopts $linux_root /mnt
 mkdir /mnt/boot
-[[ -e /sys/firmware/efi/efivar ]] && mount -o $efi_system_mntopts $efi_system /mnt/boot
+[[ -e /sys/firmware/efi/efivars ]] && mount -o $efi_system_mntopts $efi_system /mnt/boot
 
 # INSTALL
 
@@ -113,7 +113,7 @@ CHROOT="arch-chroot /mnt"
 ## edit fstab
 
 echo "PARTLABEL='linux_root'  /     btrfs $linux_root_mntopts 0 0" > /mnt/etc/fstab
-if [[ -e /sys/firmware/efi/efivar ]]; then
+if [[ -e /sys/firmware/efi/efivars ]]; then
   echo "PARTLABEL='efi_system'  /boot vfat  $efi_system_mntopts 0 2" >> /mnt/etc/fstab
 fi
 
@@ -136,7 +136,7 @@ $CHROOT hwclock --systohc --utc
 ## boot
 
 $CHROOT mkinitcpio -p linux
-if [[ -e /sys/firmware/efi/efivar ]]; then
+if [[ -e /sys/firmware/efi/efivars ]]; then
   $CHROOT bootctl --path=/boot install
   cat > /mnt/boot/loader/entries/arch.conf <<EOS
 title   Arch Linux
