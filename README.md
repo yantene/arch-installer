@@ -3,10 +3,8 @@
 EFI 環境および GPT BIOS 環境に Arch Linux をインストールするスクリプトです．
 筆者が Arch Linux の環境構築する際に使用しているスクリプトを公開しているものです．
 
-EFI 環境向けのスクリプト `setup.efi.sh` は
-QEMU 環境および SONY VAIO Pro (SVP1321A1J)，
-BIOS 環境向けのスクリプト `setup.gpt_bios.sh` は
-QEMU 環境および SONY VAIO T (SVT1311AJ) で検証しました．
+EFI 環境は SONY VAIO Pro (SVP1321A1J)，
+BIOS 環境は SONY VAIO T (SVT1311AJ) で検証しました。
 
 なお，本スクリプトの使用は自己責任でお願いいたします．
 
@@ -24,10 +22,6 @@ QEMU 環境および SONY VAIO T (SVT1311AJ) で検証しました．
 ## 使い方
 
 まず，Arch のインストールメディアをインストールしたい対象環境でブートします．
-この時点で，対象環境が EFI マシンか BIOS のマシンかを把握しておきます．
-確認方法は以下を参照してください．
-
-[インストールガイド - ArchWiki 起動モードの確認](https://wiki.archlinuxjp.org/index.php/%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB%E3%82%AC%E3%82%A4%E3%83%89#.E8.B5.B7.E5.8B.95.E3.83.A2.E3.83.BC.E3.83.89.E3.81.AE.E7.A2.BA.E8.AA.8D)
 
 次に，インターネット接続を行います．
 環境に合わせて `wifi-menu` なり `dhcpcd` なりを叩きましょう．
@@ -40,8 +34,7 @@ QEMU 環境および SONY VAIO T (SVT1311AJ) で検証しました．
 curl -L git.io/yai.tgz | tar zxf -
 ```
 
-後はEFI環境の場合は`arch-installer-master/setup.efi.sh`，
-BIOS環境の場合は`arch-installer-master/setup.gpt_bios.sh`をおもむろに実行し，
+後はEFI環境の場合は`arch-installer-master/setup.sh`をおもむろに実行し，
 指示に従って以下の項目を入力します．
 
 - **インストール先デバイス** (デフォルト値: /dev/sda)
