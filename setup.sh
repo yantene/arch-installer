@@ -74,12 +74,13 @@ linux_root_mntopts='rw,noatime,discard,ssd,autodefrag,compress=lzo,space_cache'
 
 
 mount -o $linux_root_mntopts $linux_root /mnt
-cd /mnt
-btrfs subvolume create root
-btrfs subvolume set-default `btrfs subvol list -p . | cut -d' ' -f2` .
-btrfs subvolume create root/home
-btrfs subvolume create snapshots
-cd ~
+(
+  cd /mnt
+  btrfs subvolume create root
+  btrfs subvolume set-default `btrfs subvol list -p . | cut -d' ' -f2` .
+  btrfs subvolume create root/home
+  btrfs subvolume create snapshots
+)
 umount /mnt
 
 ## mount
