@@ -102,10 +102,7 @@ pacstrap /mnt \
   dosfstools \
   btrfs-progs \
   lzo \
-  zsh \
-  neovim \
-  openssh \
-  wpa_supplicant
+  zsh
 
 # SETUP
 
