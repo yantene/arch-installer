@@ -194,6 +194,14 @@ $CHROOT bash -c "
   pacman -U --noconfirm ./yay*.pkg.tar.xz
 "
 
+## install packages
+
+$CHROOT bash -c "
+  echo '$USERNAME ALL=(root) NOPASSWD: ALL' >> /etc/sudoers
+  sudo -u $USERNAME yay --noconfirm -S $(sed 's/#.*$//g' `dirname $0`/res/packages | tr '\n' ' ')
+  sed -i -e '\$d' /etc/sudoers
+"
+
 ## create btrfs snapshot
 
 umount -R /mnt

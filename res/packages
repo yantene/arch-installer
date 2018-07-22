@@ -1,0 +1,77 @@
+## system
+
+#yay
+#openssh
+#wpa_supplicant
+
+## CLI tools
+
+#neovim
+#hub
+#tmux
+#the_silver_searcher
+#peco
+#rdiff-backup
+#pass
+
+## X11
+
+#xorg-apps
+#xorg-xinit
+#xorg-server
+
+## login manager
+
+#lightdm
+#lightdm-gtk-greeter
+
+## window manager
+
+#xmonad
+#xmonad-contrib
+#xmobar
+
+## tools
+
+#xsel
+#rofi
+#dunst
+#termite
+
+## audio
+
+#pulseaudio
+#pulseaudio-alsa
+#alsa-utils
+#pamixer
+#pavucontrol
+
+## im
+
+#fcitx-mozc
+#fcitx-im
+#fcitx-configtool
+
+## fonts
+
+#ttf-mplus
+#noto-fonts
+#noto-fonts-cjk
+#noto-fonts-emoji
+#noto-fonts-extra
+#otf-ipamjfont
+
+## bluetooth
+
+#bluez
+#bluez-utils
+
+## applications
+
+#chromium
+#browserpass
+#slack-desktop
+#discord
+#gimp
+#inkscape
+#libreoffice-still-ja
