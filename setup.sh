@@ -157,11 +157,11 @@ fi
 ### multilib
 
 if [ `uname -m` = 'x86_64' ]; then
-cat >> /mnt/etc/pacman.conf <<EOS
+  cat >> /mnt/etc/pacman.conf <<EOS
 [multilib]
 Include = /etc/pacman.d/mirrorlist
 EOS
-$CHROOT pacman -Syy
+  $CHROOT pacman -Syy
 fi
 
 ## root settings
