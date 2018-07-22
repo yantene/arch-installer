@@ -102,6 +102,8 @@ pacstrap /mnt \
   dosfstools \
   btrfs-progs \
   lzo \
+  git \
+  go \
   zsh
 
 # SETUP
@@ -182,6 +184,15 @@ $PASSWORD
 $PASSWORD
 EOS
 $CHROOT sed -i 's/^#\s%wheel\s*ALL=(ALL)\s*ALL$/%wheel\tALL=(ALL)\tALL/g' /etc/sudoers
+
+## install yay
+
+$CHROOT bash -c "
+  cd \`sudo -u $USERNAME mktemp -d\`;
+  curl -L https://aur.archlinux.org/cgit/aur.git/snapshot/yay.tar.gz | sudo -u $USERNAME tar zxf - --strip=1;
+  sudo -u $USERNAME makepkg --noconfirm;
+  pacman -U --noconfirm ./yay*.pkg.tar.xz
+"
 
 ## create btrfs snapshot
 
