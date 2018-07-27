@@ -13,11 +13,8 @@ BIOS 環境は SONY VAIO T (SVT1311AJ) で検証しました。
 - EFI 環境、BIOS 環境ともに GPT でパーティショニングします。
   - EFI 環境のブートローダは systemd-boot です。
   - BIOS 環境のブートローダは GRUB です。
-- ファイルシステムは BTRFS を利用します。
+- ファイルシステムは btrfs を利用します。
   - インストール直後の環境は自動でスナップショットを撮ります。
-- ミラーサーバは日本近辺のサーバをベタ書きしています。
-- エディタとして neovim を標準でインストールします。
-- シェルとして zsh を標準でインストールします。
 
 ## 使い方
 
@@ -34,7 +31,14 @@ BIOS 環境は SONY VAIO T (SVT1311AJ) で検証しました。
 curl -L git.io/yai.tgz | tar zxf -
 ```
 
-後はEFI環境の場合は`arch-installer-master/setup.sh`をおもむろに実行し、
+次に `arch-installer-master/res/mirrorlist` を編集して、
+使用したいミラーサーバを指定してください。
+デフォルトでは日本周辺のミラーサーバを指定してあります。
+
+同様に、 `arch-installer-master/res/packages` を編集して、
+デフォルトでインストールしたいパッケージを追加してください。
+
+そして`arch-installer-master/setup.sh`を実行し、
 指示に従って以下の項目を入力します。
 
 - **インストール先デバイス** (デフォルト値: /dev/sda)
@@ -61,7 +65,7 @@ curl -L git.io/yai.tgz | tar zxf -
 
 ## baytrail tablet について
 
-`setup.efi.sh` の boot に関する箇所を、
+boot に関する箇所を、
 以下に置換すればインストール可能です。
 
 ```bash
