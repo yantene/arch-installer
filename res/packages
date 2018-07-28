@@ -29,6 +29,11 @@
 #virtualbox-guest-utils
 
 ## login manager
+##
+### enable display manager
+### sudo -E nvim /etc/lightdm/lightdm.conf
+### greeter-sesssion=lightdm-gtk-greeter
+### sudo systemctl enable lightdm.service
 
 #lightdm
 #lightdm-gtk-greeter
