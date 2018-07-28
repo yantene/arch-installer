@@ -21,6 +21,13 @@
 #xorg-xinit
 #xorg-server
 
+## virtualbox (guest)
+##
+### auto start VBoxClient-all
+
+#virtualbox-guest-modules-arch
+#virtualbox-guest-utils
+
 ## login manager
 
 #lightdm
