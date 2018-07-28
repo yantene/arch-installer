@@ -19,7 +19,7 @@ while [[ -z $PASSWORD ]]; do
   echo
   read -sp 'password (confirm): ' PASSWORD2
   echo
-  [[ $PASSWORD1 = $PASSWORD2 ]] && PASSWORD=PASSWORD1
+  [[ $PASSWORD1 = $PASSWORD2 ]] && PASSWORD=$PASSWORD1
 done
 
 set -eux
