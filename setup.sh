@@ -15,8 +15,11 @@ read -p  'swap size (0[MB]): ' SWAPSIZE
 [[ -z $SWAPSIZE ]] && SWAPSIZE='0'
 
 while [[ -z $PASSWORD ]]; do
-  read -sp 'password: ' PASSWORD
+  read -sp 'password: ' PASSWORD1
   echo
+  read -sp 'password (confirm): ' PASSWORD2
+  echo
+  [[ $PASSWORD1 = $PASSWORD2 ]] && PASSWORD=PASSWORD1
 done
 
 set -eux
