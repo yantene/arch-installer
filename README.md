@@ -5,6 +5,7 @@ EFI 環境および GPT BIOS 環境に Arch Linux をインストールするス
 
 EFI 環境は SONY VAIO Pro (SVP1321A1J)、
 BIOS 環境は SONY VAIO T (SVT1311AJ) で検証しました。
+その他、職場の環境や Virtualbox、QEMU などでも動作を確認しています。
 
 なお、本スクリプトの使用は自己責任でお願いいたします。
 
@@ -15,6 +16,7 @@ BIOS 環境は SONY VAIO T (SVT1311AJ) で検証しました。
   - BIOS 環境のブートローダは GRUB です。
 - ファイルシステムは btrfs を利用します。
   - インストール直後の環境は自動でスナップショットを撮ります。
+- AUR ヘルパーとして [yay](/Jguer/yay) をインストールします。
 
 ## 使い方
 
@@ -37,6 +39,7 @@ curl -L git.io/yai.tgz | tar zxf -
 
 同様に、 `arch-installer-master/res/packages` を編集して、
 デフォルトでインストールしたいパッケージを追加してください。
+AUR のパッケージも指定することができます。
 
 そして`arch-installer-master/setup.sh`を実行し、
 指示に従って以下の項目を入力します。
@@ -54,7 +57,7 @@ curl -L git.io/yai.tgz | tar zxf -
 ## インストール後
 
 筆者は、CLI 周りの環境は、
-[yantene/config: dotfiles and great buddies](https://github.com/yantene/config)
+[yantene/config: dotfiles and great buddies](/yantene/config)
 を `$HOME/.config` に `git clone` して整えています。
 
 また、GUI 周りであったり、
@@ -79,4 +82,4 @@ $CHROOT grub-mkconfig -o /boot/grub/grub.cfg
 
 インストールスクリプトの書き方には以下を参考にしました。
 
-- [archlinux-autonistaller](https://github.com/tukiyo/archlinux-autonistaller)
+- [archlinux-autonistaller](/tukiyo/archlinux-autonistaller)
