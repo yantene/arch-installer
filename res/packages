@@ -3,23 +3,14 @@
 #openssh
 #wpa_supplicant
 
-## CLI tools
-
-#neovim
-#python-neovim
-#python2-neovim
-#hub
-#tmux
-#the_silver_searcher
-#peco
-#rdiff-backup
-#pass
-
 ## X11
 
 #xorg-apps
 #xorg-xinit
 #xorg-server
+
+#xautolock
+#slock
 
 ## virtualbox (guest)
 ##
@@ -44,12 +35,11 @@
 #xmonad-contrib
 #xmobar
 
-## tools
+## window manager tools
 
 #xsel
 #rofi
 #dunst
-#termite
 
 ## audio
 
@@ -58,6 +48,11 @@
 #alsa-utils
 #pamixer
 #pavucontrol
+
+## bluetooth
+
+#bluez
+#bluez-utils
 
 ## im
 
@@ -74,17 +69,38 @@
 #noto-fonts-extra
 #otf-ipamjfont
 
-## bluetooth
+## cli applications
 
-#bluez
-#bluez-utils
+#man-pages-ja
+#neovim
+#python-neovim
+#python2-neovim
+#hub
+#ghq
+#tmux
+#skim
+#ripgrep
+#rdiff-backup
+#pass
+#lsof
+#unzip-iconv
+#whois
+#yarn
+#docker
+#mariadb-libs
+#mariadb-clients
+#direnv
+#rsync
 
-## applications
+## gui applications
 
-#chromium
+#alacritty
+#alacritty-terminfo
 #browserpass
-#slack-desktop
+#chromium
 #discord
+#evince
 #gimp
 #inkscape
 #libreoffice-still-ja
+#slack-desktop
