@@ -85,6 +85,7 @@
 #lsof
 #unzip-iconv
 #whois
+#anyenv
 #yarn
 #docker
 #mariadb-libs
