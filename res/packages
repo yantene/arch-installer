@@ -1,17 +1,20 @@
 ## system
 
+#linux-headers
+#intel-ucode
 #openssh
 #wpa_supplicant
+#wpa_actiond
 
 ## CLI tools
 
 #neovim
+#iw
 #python-neovim
-#python2-neovim
 #hub
 #tmux
-#the_silver_searcher
-#peco
+#ripgrep
+#skim
 #rdiff-backup
 #pass
 
@@ -20,6 +23,7 @@
 #xorg-apps
 #xorg-xinit
 #xorg-server
+#xdotool
 
 ## virtualbox (guest)
 ##
@@ -36,7 +40,8 @@
 ### sudo systemctl enable lightdm.service
 
 #lightdm
-#lightdm-gtk-greeter
+#light-mini-greeter
+#slock
 
 ## window manager
 
@@ -49,7 +54,8 @@
 #xsel
 #rofi
 #dunst
-#termite
+#alacritty
+#maim
 
 ## audio
 
