@@ -78,6 +78,11 @@ $CHROOT grub-install --recheck --target=i386-efi --efi-directory=/boot --bootloa
 $CHROOT grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
+## 追加の手順
+
+- `pacman.conf` に Color を追記
+- sudo timedatectl set-ntp true
+
 ## 参考文献
 
 インストールスクリプトの書き方には以下を参考にしました。
