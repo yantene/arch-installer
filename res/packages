@@ -1,13 +1,29 @@
 ## system
 
+#linux-headers
+#intel-ucode
 #openssh
 #wpa_supplicant
+#wpa_actiond
+
+## CLI tools
+
+#neovim
+#iw
+#python-neovim
+#hub
+#tmux
+#ripgrep
+#skim
+#rdiff-backup
+#pass
 
 ## X11
 
 #xorg-apps
 #xorg-xinit
 #xorg-server
+#xdotool
 
 #xautolock
 #slock
@@ -27,7 +43,8 @@
 ### sudo systemctl enable lightdm.service
 
 #lightdm
-#lightdm-gtk-greeter
+#light-mini-greeter
+#slock
 
 ## window manager
 
@@ -40,6 +57,10 @@
 #xsel
 #rofi
 #dunst
+<<<<<<< HEAD
+=======
+#alacritty
+>>>>>>> 87b9d400f566b4014c9608a88840c210c71e2d08
 #maim
 
 ## audio
