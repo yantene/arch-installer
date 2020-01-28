@@ -25,6 +25,13 @@
 #xorg-server
 #xdotool
 
+## wayland
+
+#sway
+#xorg-server-xwayland
+#swaylock
+#swayidle
+
 ## virtualbox (guest)
 ##
 ### auto start VBoxClient-all
