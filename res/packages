@@ -24,6 +24,8 @@
 #xorg-xinit
 #xorg-server
 #xdotool
+#xautolock
+#slock
 
 ## wayland
 
@@ -56,7 +58,7 @@
 #xmonad-contrib
 #xmobar
 
-## tools
+## window manager tools
 
 #xsel
 #rofi
@@ -71,6 +73,11 @@
 #alsa-utils
 #pamixer
 #pavucontrol
+
+## bluetooth
+
+#bluez
+#bluez-utils
 
 ## im
 
@@ -87,17 +94,38 @@
 #noto-fonts-extra
 #otf-ipamjfont
 
-## bluetooth
+## cli applications
 
-#bluez
-#bluez-utils
+#man-pages-ja
+#neovim
+#python-neovim
+#hub
+#ghq
+#tmux
+#skim
+#ripgrep
+#rdiff-backup
+#pass
+#lsof
+#unzip-iconv
+#whois
+#anyenv
+#yarn
+#docker
+#mariadb-libs
+#mariadb-clients
+#direnv
+#rsync
 
-## applications
+## gui applications
 
-#chromium
+#alacritty
+#alacritty-terminfo
 #browserpass
-#slack-desktop
+#chromium
 #discord
+#evince
 #gimp
 #inkscape
 #libreoffice-still-ja
+#slack-desktop
