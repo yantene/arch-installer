@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # INPUT PARAMETERS
 
@@ -6,7 +6,7 @@ read -p  'device (/dev/sda): ' DEVICE
 [[ -z $DEVICE ]] && DEVICE='/dev/sda'
 
 read -p  'hostname (YanteneLaptop): ' HOSTNAME
-[[ -z $HOSTNAME ]] && HOSTNAME='YanteneLaptop'
+[[ -z $HOSTNAME ]] && HOSTNAME='yantene-laptop'
 
 read -p  'username (yantene): ' USERNAME
 [[ -z $USERNAME ]] && USERNAME='yantene'
@@ -19,7 +19,7 @@ while [[ -z $PASSWORD ]]; do
   echo
   read -sp 'password (confirm): ' PASSWORD2
   echo
-  [[ $PASSWORD1 = $PASSWORD2 ]] && PASSWORD=$PASSWORD1
+  [[ $PASSWORD1 = $PASSWORD2 ]] && PASSWORD=$PASSWORD1 || echo 'two strings are different! enter your passwords again!'
 done
 
 set -eux
@@ -71,7 +71,7 @@ mkfs.btrfs -f -L LINUX_ROOT $linux_root
 ## set each device mount options
 
 efi_system_mntopts='rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro'
-linux_root_mntopts='rw,noatime,discard,ssd,autodefrag,compress=lzo,space_cache'
+linux_root_mntopts='rw,noatime,ssd,autodefrag,compress=zstd,space_cache'
 
 ## create btrfs subvolume
 
