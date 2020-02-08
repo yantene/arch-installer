@@ -75,14 +75,23 @@ linux_root_mntopts='rw,noatime,ssd,autodefrag,compress=zstd,space_cache'
 
 ## create btrfs subvolume
 
-
 mount -o $linux_root_mntopts $linux_root /mnt
 (
   cd /mnt
+
   btrfs subvolume create root
   btrfs subvolume set-default `btrfs subvol list -p . | cut -d' ' -f2` .
   btrfs subvolume create root/home
-  btrfs subvolume create snapshots
+
+  # directories not to be backed up (cf. https://www.ncaq.net/2019/01/28/13/37/05/)
+  btrfs subvolume create root/home/${USERNAME}/x # user's temporary directory
+  btrfs subvolume create root/home/${USERNAME}/.cache
+  btrfs subvolume create root/opt
+  btrfs subvolume create root/usr
+  btrfs subvolume create root/var/cache
+  btrfs subvolume create root/var/db
+  btrfs subvolume create root/var/lib/docker
+  btrfs subvolume create root/var/log
 )
 umount /mnt
 
@@ -109,6 +118,7 @@ pacstrap /mnt \
   lzo \
   zstd \
   git \
+  snapper \
   go \
   zsh
 
@@ -207,14 +217,5 @@ $CHROOT bash -c "
   sudo -u $USERNAME yay --noconfirm -S $(sed 's/#.*$//g' `dirname $0`/res/packages | tr '\n' ' ')
   sed -i -e '\$d' /etc/sudoers
 "
-
-## create btrfs snapshot
-
-umount -R /mnt
-mount -o $linux_root_mntopts,subvol=/ $linux_root /mnt
-ptime=`date +'%s'`
-btrfs subvolume snapshot /mnt/root      /mnt/snapshots/${ptime}-root
-btrfs subvolume snapshot /mnt/root/home /mnt/snapshots/${ptime}-home
-umount /mnt
 
 set +x
