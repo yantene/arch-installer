@@ -1,0 +1,19 @@
+# Check keycode by `sudo showkey --scancodes` and `sudo evtest /dev/input/event3`
+# Execute `sudo udevadm hwdb --update` and reboot
+
+evdev:atkbd:dmi:bvn*:bvr*:bd*:svnLENOVO:pn*:pvrThinkPadX280* # ThinkPad X280
+  KEYBOARD_KEY_3a=leftctrl    # Caps Lock -> Left Ctrl
+  KEYBOARD_KEY_1d=leftmeta    # Left Ctrl -> Left Super
+  KEYBOARD_KEY_38=muhenkan    # Left Alt -> Muhenkan
+  KEYBOARD_KEY_b8=henkan      # Right Alt -> Henkanmode
+  KEYBOARD_KEY_9d=rightalt    # Right Ctrl -> Right Alt
+
+evdev:input:b0003v0853p0100e* # HHKB Professional 2 (dip: 010011, USB: 0003, lsusb: 0853:0100)
+  KEYBOARD_KEY_700e2=muhenkan # Left Alt -> Muhenkan
+  KEYBOARD_KEY_700e6=henkan   # Right Alt -> Henkanmode
+  KEYBOARD_KEY_700e7=rightalt # Right Super -> Right Alt
+
+evdev:input:b0003v04FEp0020e* # HHKB Professional Classic (dip: 010011, USB: 0003, lsusb: 04FE:0020)
+  KEYBOARD_KEY_700e2=muhenkan # Left Alt -> Muhenkan
+  KEYBOARD_KEY_700e6=henkan   # Right Alt -> Henkanmode
+  KEYBOARD_KEY_700e7=rightalt # Right Super -> Right Alt
