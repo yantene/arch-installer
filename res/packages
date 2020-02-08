@@ -3,6 +3,8 @@
 #linux-headers
 #intel-ucode
 #openssh
+#netctl
+#dhcpcd
 #wpa_supplicant
 #wpa_actiond
 
@@ -30,14 +32,9 @@
 #virtualbox-guest-utils
 
 ## login manager
-##
-### enable display manager
-### sudo -E nvim /etc/lightdm/lightdm.conf
-### greeter-sesssion=lightdm-gtk-greeter
-### sudo systemctl enable lightdm.service
 
 #lightdm
-#light-mini-greeter
+#lightdm-mini-greeter
 
 ## window manager
 
@@ -84,6 +81,7 @@
 
 ## cli applications
 
+#man-pages
 #man-pages-ja
 #neovim
 #python-neovim
