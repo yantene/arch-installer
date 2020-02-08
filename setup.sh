@@ -5,7 +5,7 @@
 read -p  'device (/dev/sda): ' DEVICE
 [[ -z $DEVICE ]] && DEVICE='/dev/sda'
 
-read -p  'hostname (YanteneLaptop): ' HOSTNAME
+read -p  'hostname (yantene-laptop): ' HOSTNAME
 [[ -z $HOSTNAME ]] && HOSTNAME='yantene-laptop'
 
 read -p  'username (yantene): ' USERNAME
