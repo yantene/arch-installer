@@ -6,18 +6,6 @@
 #wpa_supplicant
 #wpa_actiond
 
-## CLI tools
-
-#neovim
-#iw
-#python-neovim
-#hub
-#tmux
-#ripgrep
-#skim
-#rdiff-backup
-#pass
-
 ## X11
 
 #xorg-apps
@@ -50,7 +38,6 @@
 
 #lightdm
 #light-mini-greeter
-#slock
 
 ## window manager
 
@@ -64,6 +51,7 @@
 #rofi
 #dunst
 #alacritty
+#alacritty-terminfo
 #maim
 
 ## audio
@@ -116,11 +104,10 @@
 #mariadb-clients
 #direnv
 #rsync
+#iw
 
 ## gui applications
 
-#alacritty
-#alacritty-terminfo
 #browserpass
 #chromium
 #discord
