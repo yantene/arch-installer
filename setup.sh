@@ -78,20 +78,9 @@ linux_root_mntopts='rw,noatime,ssd,autodefrag,compress=zstd,space_cache'
 mount -o $linux_root_mntopts $linux_root /mnt
 (
   cd /mnt
-
   btrfs subvolume create root
   btrfs subvolume set-default `btrfs subvol list -p . | cut -d' ' -f2` .
   btrfs subvolume create root/home
-
-  # directories not to be backed up (cf. https://www.ncaq.net/2019/01/28/13/37/05/)
-  btrfs subvolume create root/home/${USERNAME}/x # user's temporary directory
-  btrfs subvolume create root/home/${USERNAME}/.cache
-  btrfs subvolume create root/opt
-  btrfs subvolume create root/usr
-  btrfs subvolume create root/var/cache
-  btrfs subvolume create root/var/db
-  btrfs subvolume create root/var/lib/docker
-  btrfs subvolume create root/var/log
 )
 umount /mnt
 
@@ -217,5 +206,21 @@ $CHROOT bash -c "
   sudo -u $USERNAME yay --noconfirm -S $(sed 's/#.*$//g' `dirname $0`/res/packages | tr '\n' ' ')
   sed -i -e '\$d' /etc/sudoers
 "
+
+# set the directories not to be backed up
+
+mount -o $linux_root_mntopts $linux_root /mnt
+(
+  cd /mnt
+  btrfs subvolume create root/home/${USERNAME}/x # user's temporary directory
+  btrfs subvolume create root/home/${USERNAME}/.cache
+  btrfs subvolume create root/opt
+  btrfs subvolume create root/usr
+  btrfs subvolume create root/var/cache
+  btrfs subvolume create root/var/db
+  btrfs subvolume create root/var/lib/docker
+  btrfs subvolume create root/var/log
+)
+umount /mnt
 
 set +x
