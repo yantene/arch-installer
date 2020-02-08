@@ -101,10 +101,13 @@ cp -f `dirname $0`/res/mirrorlist /etc/pacman.d/mirrorlist
 
 pacstrap /mnt \
   base \
+  linux \
+  linux-firmware \
   base-devel \
   dosfstools \
   btrfs-progs \
   lzo \
+  zstd \
   git \
   go \
   zsh
