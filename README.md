@@ -54,6 +54,17 @@ AUR のパッケージも指定することができます。
 
 ## インストール後
 
+### ネットワーク設定
+
+ネットつなげるようにまずネットの設定を。
+環境に合わせて設定。
+
+```shell-session
+sudo cp /etc/netctl/{examples/ethernet-dhcp,default}
+sudo nvim /etc/netctl/default # Interface= 以後を適切なものに修正
+sudo netctl enable --now default
+```
+
 ### SSD の trim 設定
 
 ```shell-session
@@ -83,7 +94,16 @@ xmonad の設定はやはり
 そして `/etc/lightdm/lightdm.conf` を編集し、以下の行を編集してください。
 
 ```conf
+[Seat:*]
 greeter-session=lightdm-mini-greeter
+user-session=xmonad
+```
+
+また、 `/etc/lightdm/lightdm-mini-greeter.conf` の `user` を `${USERNAME} に設定します。
+
+```conf
+[greeter]
+user = yantene
 ```
 
 lightdm を有効化。
