@@ -62,7 +62,8 @@ AUR のパッケージも指定することができます。
 ```shell-session
 sudo cp /etc/netctl/{examples/ethernet-dhcp,default}
 sudo nvim /etc/netctl/default # Interface= 以後を適切なものに修正
-sudo netctl enable --now default
+sudo netctl enable default
+sudo netctl start default
 ```
 
 ### SSD の trim 設定
@@ -84,6 +85,9 @@ cf. [ソリッドステートドライブ - ArchWiki](https://wiki.archlinux.jp/
 本リポジトリの `doc/` 下に配置しています。
 いずれ整理するつもりで、
 現在非常に雑然としていますが、参考にしてください。
+
+また、先に `sudo -E nvim` をしてしまうと `.cache` 下などに root 権限でディレクトリが作成されてしまうため、
+一度 `nvim` コマンドを叩いておくと良いです。
 
 ### GUI 設定
 
