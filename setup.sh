@@ -83,7 +83,7 @@ mount -o $linux_root_mntopts $linux_root /mnt
   btrfs subvolume create root/home
 
   # set the directories not to be backed up
-  mkdir -p ./root/{home/${USERNAME},var/{,lib}}
+  mkdir -p ./root/{home/${USERNAME},var/lib}
   btrfs subvolume create root/home/${USERNAME}/x # user's temporary directory
   btrfs subvolume create root/home/${USERNAME}/.cache
   btrfs subvolume create root/opt
@@ -199,6 +199,8 @@ $CHROOT passwd $USERNAME <<EOS
 $PASSWORD
 $PASSWORD
 EOS
+$CHROOT chown -R $USERNAME:users /home/$USERNAME
+$CHROOT chmod 700 /home/$USERNAME
 $CHROOT sed -i 's/^#\s%wheel\s*ALL=(ALL)\s*ALL$/%wheel\tALL=(ALL)\tALL/g' /etc/sudoers
 
 ## install yay
