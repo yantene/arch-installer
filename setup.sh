@@ -83,7 +83,7 @@ mount -o $linux_root_mntopts $linux_root /mnt
   btrfs subvolume create root/home
 
   # set the directories not to be backed up
-  mkdir -p ./root/{home/${USERNAME},opt,usr,var/{,lib}}
+  mkdir -p ./root/{home/${USERNAME},var/{,lib}}
   btrfs subvolume create root/home/${USERNAME}/x # user's temporary directory
   btrfs subvolume create root/home/${USERNAME}/.cache
   btrfs subvolume create root/opt
