@@ -87,6 +87,8 @@
 #skim
 #fd
 #ripgrep
+#exa
+#bat
 #rdiff-backup
 #lsof
 #bind-tools
@@ -100,6 +102,7 @@
 #direnv
 #rsync
 #iw
+#htop
 
 ## gui applications
 
